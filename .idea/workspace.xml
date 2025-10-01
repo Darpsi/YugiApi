@@ -5,20 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="346042b9-f6da-4af2-a3a3-6e7c569b4052" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/unit3/Cartas.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/unit3/YugiGUI.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/unit3/YugiGUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/YugiApi_Data/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/YugiApi_Data/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/YugiApi_Data/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/YugiApi_Data/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/YugiApi_Data/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/YugiApi_Data/src/main/java/org/example/unit3/App.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/YugiApi_Data/src/test/java/org/example/unit3/AppTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/unit3/App.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -39,6 +43,9 @@
   &quot;associatedIndex&quot;: 6
 }</component>
   <component name="ProjectId" id="33RsW5L2hcL6N7wAWqjItr87Psu" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -46,12 +53,14 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Application.YugiGUI.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/brian/IdeaProjects/YugiApi",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2",
