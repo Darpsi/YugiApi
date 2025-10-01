@@ -5,10 +5,22 @@ import javax.swing.*;
 public class YugiGUI {
     private JPanel mainPanel;
     private JPanel JPanelUp;
-    private JPanel JPanelRight;
+    private JPanel JPanelDown;
     private JLabel Titulo;
-    private JButton RandomLeft;
-    private JButton RandomRight;
+    private JButton RandomUp;
+    private JButton RandomDown;
+    private JPanel CardUp1;
+    private JPanel CardUp2;
+    private JPanel CardUp3;
+    private JPanel CardDown1;
+    private JPanel CardDown2;
+    private JPanel CardDown3;
+    private JLabel Nombreup1;
+    private JLabel Nombreup2;
+    private JLabel Nombreup3;
+    private JLabel NombreDown1;
+    private JLabel NombreDown2;
+    private JLabel NombreDown3;
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("YugiGUI");

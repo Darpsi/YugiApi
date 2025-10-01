@@ -5,12 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="346042b9-f6da-4af2-a3a3-6e7c569b4052" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/unit3/Cartas.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/unit3/YugiGUI.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/unit3/YugiGUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/unit3/App.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/unit3/YugiGUI.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/unit3/YugiGUI.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/unit3/YugiGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/unit3/YugiGUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
