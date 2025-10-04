@@ -21,6 +21,9 @@ public class YugiGUI {
     private JLabel NombreDown1;
     private JLabel NombreDown2;
     private JLabel NombreDown3;
+    private JButton usarButton2;
+    private JButton usarButton1;
+    private JButton usarButton3;
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("YugiGUI");
