@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.List;
 
 /**
- * Clase principal de la interfaz gráfica para el juego Yu-Gi-Oh! Duel Lite.
+ * Clase principal de la interfaz gráfica para el juego.
  * Gestiona la UI, la obtención de cartas desde la API YGOProDeck y la lógica de duelos.
  */
 public class YugiGUI {
@@ -59,7 +59,7 @@ public class YugiGUI {
     private boolean randomDownUsed = false;       // Indicador para RandomDown (jugador)
     private int playerWins = 0;                   // Contador de victorias del jugador
     private int npcWins = 0;                      // Contador de victorias del NPC
-    private Random random = new Random();         // Generador de números aleatorios
+    private Random random = new Random();
 
     /**
      * Constructor que inicializa la interfaz gráfica y configura los listeners para los botones.
