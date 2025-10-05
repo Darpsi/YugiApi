@@ -24,6 +24,7 @@ public class YugiGUI {
     private JButton usarButton2;
     private JButton usarButton1;
     private JButton usarButton3;
+    
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("YugiGUI");
