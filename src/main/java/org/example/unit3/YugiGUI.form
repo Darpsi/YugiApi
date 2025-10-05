@@ -104,12 +104,14 @@
           </component>
         </children>
       </grid>
-      <grid id="deffd" binding="JPanelDown" layout-manager="GridLayoutManager" row-count="3" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="deffd" binding="JPanelDown" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <autoscrolls value="false"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="141a6" class="javax.swing.JButton" binding="RandomDown">
@@ -198,28 +200,58 @@
               </component>
             </children>
           </grid>
-          <component id="cfda4" class="javax.swing.JButton" binding="usarButton2">
+          <component id="cfda4" class="javax.swing.JButton" binding="AtaqueButton2">
             <constraints>
               <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Usar"/>
+              <autoscrolls value="false"/>
+              <text value="Ataque"/>
             </properties>
           </component>
-          <component id="e4e3a" class="javax.swing.JButton" binding="usarButton1">
+          <component id="e4e3a" class="javax.swing.JButton" binding="AtaqueButton1">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Usar"/>
+              <autoscrolls value="false"/>
+              <text value="Ataque"/>
             </properties>
           </component>
-          <component id="bb9bf" class="javax.swing.JButton" binding="usarButton3">
+          <component id="bb9bf" class="javax.swing.JButton" binding="AtaqueButton3">
             <constraints>
               <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Usar"/>
+              <autoscrolls value="false"/>
+              <text value="Ataque"/>
+            </properties>
+          </component>
+          <component id="fd6ad" class="javax.swing.JButton" binding="DefensaButton1">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <autoscrolls value="false"/>
+              <text value="Defensa"/>
+            </properties>
+          </component>
+          <component id="4d26d" class="javax.swing.JButton" binding="DefensaButton2">
+            <constraints>
+              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <autoscrolls value="false"/>
+              <text value="Defensa"/>
+            </properties>
+          </component>
+          <component id="48982" class="javax.swing.JButton" binding="DefensaButton3">
+            <constraints>
+              <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <autoscrolls value="false"/>
+              <text value="Defensa"/>
             </properties>
           </component>
         </children>
