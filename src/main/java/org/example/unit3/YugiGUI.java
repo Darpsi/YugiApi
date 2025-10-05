@@ -16,6 +16,10 @@ import java.net.http.HttpResponse;
 import java.util.*;
 import java.util.List;
 
+/**
+ * Clase principal de la interfaz gráfica para el juego Yu-Gi-Oh! Duel Lite.
+ * Gestiona la UI, la obtención de cartas desde la API YGOProDeck y la lógica de duelos.
+ */
 public class YugiGUI {
     private JPanel mainPanel;
     private JPanel JPanelUp;
@@ -23,9 +27,12 @@ public class YugiGUI {
     private JLabel Titulo;
     private JButton RandomUp;
     private JButton RandomDown;
-    private JButton usarButton1;
-    private JButton usarButton2;
-    private JButton usarButton3;
+    private JButton AtaqueButton1;
+    private JButton AtaqueButton2;
+    private JButton AtaqueButton3;
+    private JButton DefensaButton1;
+    private JButton DefensaButton2;
+    private JButton DefensaButton3;
     private JPanel CardUp1;
     private JPanel CardUp2;
     private JPanel CardUp3;
@@ -46,13 +53,19 @@ public class YugiGUI {
     private JLabel ImgDown2;
     private JLabel ImgDown3;
 
-    private Cartas[] playerCards = new Cartas[3];
-    private Cartas[] npcCards = new Cartas[3];
-    private boolean randomUpUsed = false;
-    private boolean randomDownUsed = false;
-    private Random random = new Random();
+    private Cartas[] playerCards = new Cartas[3]; // Cartas del jugador humano (abajo, CardDown*)
+    private Cartas[] npcCards = new Cartas[3];    // Cartas del NPC (arriba, CardUp*)
+    private boolean randomUpUsed = false;         // Indicador para RandomUp (NPC)
+    private boolean randomDownUsed = false;       // Indicador para RandomDown (jugador)
+    private int playerWins = 0;                   // Contador de victorias del jugador
+    private int npcWins = 0;                      // Contador de victorias del NPC
+    private Random random = new Random();         // Generador de números aleatorios
 
+    /**
+     * Constructor que inicializa la interfaz gráfica y configura los listeners para los botones.
+     */
     public YugiGUI() {
+        // Inicializar etiquetas de imagen
         ImgUp1 = new JLabel();
         ImgUp2 = new JLabel();
         ImgUp3 = new JLabel();
@@ -60,6 +73,7 @@ public class YugiGUI {
         ImgDown2 = new JLabel();
         ImgDown3 = new JLabel();
 
+        // Configurar paneles de cartas
         inicializarPanelCarta(CardUp1, ImgUp1, Nombreup1);
         inicializarPanelCarta(CardUp2, ImgUp2, Nombreup2);
         inicializarPanelCarta(CardUp3, ImgUp3, Nombreup3);
@@ -67,26 +81,43 @@ public class YugiGUI {
         inicializarPanelCarta(CardDown2, ImgDown2, NombreDown2);
         inicializarPanelCarta(CardDown3, ImgDown3, NombreDown3);
 
+        // Listener para generar cartas del jugador
         RandomDown.addActionListener((ActionEvent e) -> {
             if (!randomDownUsed) {
-                mostrarCartas(1);
+                mostrarCartas(1); // Jugador humano
                 randomDownUsed = true;
                 RandomDown.setEnabled(false);
+                RandomDown.setVisible(false); // Ocultar botón tras uso
             }
         });
+
+        // Listener para generar cartas del NPC
         RandomUp.addActionListener((ActionEvent e) -> {
             if (!randomUpUsed) {
                 mostrarCartas(2); // NPC
                 randomUpUsed = true;
                 RandomUp.setEnabled(false);
+                RandomUp.setVisible(false); // Ocultar botón tras uso
             }
         });
 
-        usarButton1.addActionListener((ActionEvent e) -> compareCards(1));
-        usarButton2.addActionListener((ActionEvent e) -> compareCards(2));
-        usarButton3.addActionListener((ActionEvent e) -> compareCards(3));
+        // Listeners para seleccionar cartas del jugador en modo ataque
+        AtaqueButton1.addActionListener((ActionEvent e) -> compareCards(1, false));
+        AtaqueButton2.addActionListener((ActionEvent e) -> compareCards(2, false));
+        AtaqueButton3.addActionListener((ActionEvent e) -> compareCards(3, false));
+
+        // Listeners para seleccionar cartas del jugador en modo defensa
+        DefensaButton1.addActionListener((ActionEvent e) -> compareCards(1, true));
+        DefensaButton2.addActionListener((ActionEvent e) -> compareCards(2, true));
+        DefensaButton3.addActionListener((ActionEvent e) -> compareCards(3, true));
     }
 
+    /**
+     * Inicializa un panel de carta con su imagen y etiqueta de texto.
+     * @param panel Panel de la carta
+     * @param imagen JLabel para la imagen de la carta
+     * @param nombre JLabel para los datos de la carta
+     */
     private void inicializarPanelCarta(JPanel panel, JLabel imagen, JLabel nombre) {
         panel.setLayout(new BorderLayout());
         imagen.setHorizontalAlignment(SwingConstants.CENTER);
@@ -94,12 +125,18 @@ public class YugiGUI {
         nombre.setHorizontalAlignment(SwingConstants.CENTER);
         nombre.setVerticalAlignment(SwingConstants.TOP);
         nombre.setPreferredSize(new Dimension(120, 150));
+        panel.setPreferredSize(new Dimension(150, 250)); // Tamaño fijo para cartas
         panel.add(imagen, BorderLayout.CENTER);
         panel.add(nombre, BorderLayout.SOUTH);
     }
 
+    /**
+     * Consulta una carta aleatoria desde la API YGOProDeck.
+     * @return Objeto Cartas con los datos de la carta, o null si falla la consulta
+     */
     public Cartas consultar() {
         try {
+            // Configurar cliente HTTP
             HttpClient client = HttpClient.newBuilder()
                     .followRedirects(HttpClient.Redirect.ALWAYS)
                     .build();
@@ -108,7 +145,9 @@ public class YugiGUI {
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
+            // Verificar respuesta exitosa
             if (response.statusCode() == 200) {
+                // Parsear JSON
                 JSONObject root = new JSONObject(response.body());
                 JSONArray dataArray = root.getJSONArray("data");
                 JSONObject cardData = dataArray.getJSONObject(0);
@@ -123,9 +162,11 @@ public class YugiGUI {
                 String race = cardData.optString("race", "N/A");
                 String attribute = cardData.optString("attribute", "N/A");
 
+                // Obtener URL de la imagen
                 JSONArray images = cardData.getJSONArray("card_images");
                 String imgURL = images.getJSONObject(0).getString("image_url");
 
+                // Crear y devolver objeto Cartas
                 Cartas carta = new Cartas(id, name, type, desc, atk, def, level, race, attribute);
                 carta.setImage(imgURL);
                 return carta;
@@ -139,6 +180,10 @@ public class YugiGUI {
         return null;
     }
 
+    /**
+     * Obtiene y muestra 3 cartas únicas para un jugador (humano o NPC).
+     * @param jugador 1 para humano (CardDown*), 2 para NPC (CardUp*)
+     */
     public void mostrarCartas(int jugador) {
         Set<String> usedCardIds = new HashSet<>();
         int maxRetries = 5;
@@ -151,9 +196,9 @@ public class YugiGUI {
                 if (carta != null) {
                     if (!usedCardIds.contains(carta.getId())) {
                         usedCardIds.add(carta.getId());
-                        if (jugador == 1) {
+                        if (jugador == 1) { // Jugador humano (abajo)
                             playerCards[i - 1] = carta;
-                        } else {
+                        } else { // NPC (arriba)
                             npcCards[i - 1] = carta;
                         }
                         extraer_datos(carta, jugador, i);
@@ -186,69 +231,124 @@ public class YugiGUI {
         }
     }
 
-    private void compareCards(int playerPosition) {
+    /**
+     * Compara las cartas del jugador y NPC, asignando puntos según las reglas de ATK vs. DEF.
+     * @param playerPosition Posición de la carta del jugador (1, 2, 3)
+     * @param playerInDefense Indica si el jugador está en modo defensa (true) o ataque (false)
+     */
+    private void compareCards(int playerPosition, boolean playerInDefense) {
+        // Verificar si ambos jugadores han generado sus cartas
         if (!randomDownUsed || !randomUpUsed) {
-            JOptionPane.showMessageDialog(mainPanel,
-                    "¡Ambos jugadores deben generar sus cartas primero!",
-                    "Error",
-                    JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(mainPanel, "¡Ambos jugadores deben generar sus cartas primero!", "Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
+        // Verificar si hay cartas disponibles
         List<Integer> playerActive = getActiveCardIndices(playerCards);
         List<Integer> npcActive = getActiveCardIndices(npcCards);
 
         if (playerActive.isEmpty() || npcActive.isEmpty()) {
-            checkGameOver();
+            JOptionPane.showMessageDialog(mainPanel, "¡No hay cartas disponibles para la batalla!", "Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
+        // Verificar si la carta seleccionada del jugador está activa
         int playerIndex = playerPosition - 1;
         if (!playerActive.contains(playerIndex)) {
-            JOptionPane.showMessageDialog(mainPanel,
-                    "¡No hay carta en la posición seleccionada!",
-                    "Error",
-                    JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(mainPanel, "¡No hay carta en la posición seleccionada!", "Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
+        // Seleccionar carta aleatoria del NPC
         int npcIndex = npcActive.get(random.nextInt(npcActive.size()));
         Cartas playerCard = playerCards[playerIndex];
         Cartas npcCard = npcCards[npcIndex];
 
-        int playerScore = Integer.parseInt(playerCard.getAtk()) + Integer.parseInt(playerCard.getDef());
-        int npcScore = Integer.parseInt(npcCard.getAtk()) + Integer.parseInt(npcCard.getDef());
+        // Determinar modos de las cartas
+        boolean npcInDefense = random.nextBoolean();
+        String playerMode = playerInDefense ? "Defensa" : "Ataque";
+        String npcMode = npcInDefense ? "Defensa" : "Ataque";
+        int playerScore = playerInDefense ? Integer.parseInt(playerCard.getDef()) : Integer.parseInt(playerCard.getAtk());
+        int npcScore = npcInDefense ? Integer.parseInt(npcCard.getDef()) : Integer.parseInt(npcCard.getAtk());
 
-        if (playerScore > npcScore) {
-            removeCard(2, npcIndex + 1);
-            npcCards[npcIndex] = null;
-            JOptionPane.showMessageDialog(mainPanel,
-                    "¡La carta del Jugador " + playerPosition + " (" + playerCard.getName() + ", ATK+DEF: " + playerScore +
-                            ") derrota a la carta del NPC " + (npcIndex + 1) + " (" + npcCard.getName() + ", ATK+DEF: " + npcScore + ")!",
-                    "Resultado de la batalla", JOptionPane.INFORMATION_MESSAGE);
-        } else if (npcScore > playerScore) {
-            removeCard(1, playerIndex + 1);
-            playerCards[playerIndex] = null;
-            JOptionPane.showMessageDialog(mainPanel,
-                    "¡La carta del NPC " + (npcIndex + 1) + " (" + npcCard.getName() + ", ATK+DEF: " + npcScore +
-                            ") derrota a la carta del Jugador " + playerPosition + " (" + playerCard.getName() + ", ATK+DEF: " + playerScore + ")!",
-                    "Resultado de la batalla", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            removeCard(1, playerIndex + 1);
-            removeCard(2, npcIndex + 1);
-            playerCards[playerIndex] = null;
-            npcCards[npcIndex] = null;
+        // Comparar según reglas de Yu-Gi-Oh!
+        if (playerInDefense && npcInDefense) {
+            // Ambos en defensa: empate
             JOptionPane.showMessageDialog(mainPanel,
                     "¡Empate! La carta del Jugador " + playerPosition + " (" + playerCard.getName() +
                             ") y la carta del NPC " + (npcIndex + 1) + " (" + npcCard.getName() +
-                            ") (ATK+DEF: " + playerScore + ") son eliminadas.",
+                            ") están en Defensa.\n" +
+                            "Victorias: Jugador " + playerWins + ", NPC " + npcWins,
                     "Resultado de la batalla", JOptionPane.INFORMATION_MESSAGE);
+        } else if (playerInDefense) {
+            // Jugador en defensa, NPC en ataque
+            if (npcScore > playerScore) {
+                npcWins++;
+                JOptionPane.showMessageDialog(mainPanel,
+                        "¡La carta del NPC " + (npcIndex + 1) + " (" + npcCard.getName() + ", ATK: " + npcScore +
+                                ") derrota a la carta del Jugador " + playerPosition + " (" + playerCard.getName() + ", DEF: " + playerScore + ")!\n" +
+                                "Victorias: Jugador " + playerWins + ", NPC " + npcWins,
+                        "Resultado de la batalla", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(mainPanel,
+                        "¡Empate! La carta del Jugador " + playerPosition + " (" + playerCard.getName() +
+                                ", DEF: " + playerScore + ") resiste a la carta del NPC " + (npcIndex + 1) + " (" + npcCard.getName() +
+                                ", ATK: " + npcScore + ").\n" +
+                                "Victorias: Jugador " + playerWins + ", NPC " + npcWins,
+                        "Resultado de la batalla", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else if (npcInDefense) {
+            // Jugador en ataque, NPC en defensa
+            if (playerScore > npcScore) {
+                playerWins++;
+                JOptionPane.showMessageDialog(mainPanel,
+                        "¡La carta del Jugador " + playerPosition + " (" + playerCard.getName() + ", ATK: " + playerScore +
+                                ") derrota a la carta del NPC " + (npcIndex + 1) + " (" + npcCard.getName() + ", DEF: " + npcScore + ")!\n" +
+                                "Victorias: Jugador " + playerWins + ", NPC " + npcWins,
+                        "Resultado de la batalla", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(mainPanel,
+                        "¡Empate! La carta del Jugador " + playerPosition + " (" + playerCard.getName() +
+                                ", ATK: " + playerScore + ") no supera a la carta del NPC " + (npcIndex + 1) + " (" + npcCard.getName() +
+                                ", DEF: " + npcScore + ").\n" +
+                                "Victorias: Jugador " + playerWins + ", NPC " + npcWins,
+                        "Resultado de la batalla", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            // Ambos en ataque
+            if (playerScore > npcScore) {
+                playerWins++;
+                JOptionPane.showMessageDialog(mainPanel,
+                        "¡La carta del Jugador " + playerPosition + " (" + playerCard.getName() + ", ATK: " + playerScore +
+                                ") derrota a la carta del NPC " + (npcIndex + 1) + " (" + npcCard.getName() + ", ATK: " + npcScore + ")!\n" +
+                                "Victorias: Jugador " + playerWins + ", NPC " + npcWins,
+                        "Resultado de la batalla", JOptionPane.INFORMATION_MESSAGE);
+            } else if (npcScore > playerScore) {
+                npcWins++;
+                JOptionPane.showMessageDialog(mainPanel,
+                        "¡La carta del NPC " + (npcIndex + 1) + " (" + npcCard.getName() + ", ATK: " + npcScore +
+                                ") derrota a la carta del Jugador " + playerPosition + " (" + playerCard.getName() + ", ATK: " + playerScore + ")!\n" +
+                                "Victorias: Jugador " + playerWins + ", NPC " + npcWins,
+                        "Resultado de la batalla", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(mainPanel,
+                        "¡Empate! La carta del Jugador " + playerPosition + " (" + playerCard.getName() +
+                                ") y la carta del NPC " + (npcIndex + 1) + " (" + npcCard.getName() +
+                                ") (ATK: " + playerScore + " vs. ATK: " + npcScore + ") tienen la misma fuerza.\n" +
+                                "Victorias: Jugador " + playerWins + ", NPC " + npcWins,
+                        "Resultado de la batalla", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
 
+        // Verificar si el juego ha terminado
         checkGameOver();
     }
 
-
+    /**
+     * Obtiene los índices de las cartas activas (no nulas) en un arreglo.
+     * @param cards Arreglo de cartas
+     * @return Lista de índices de cartas activas
+     */
     private List<Integer> getActiveCardIndices(Cartas[] cards) {
         List<Integer> active = new ArrayList<>();
         for (int i = 0; i < cards.length; i++) {
@@ -259,6 +359,11 @@ public class YugiGUI {
         return active;
     }
 
+    /**
+     * Limpia la imagen y texto de una carta en la UI (no usado en el sistema actual).
+     * @param jugador 1 para humano, 2 para NPC
+     * @param posicion Posición de la carta (1, 2, 3)
+     */
     private void removeCard(int jugador, int posicion) {
         JLabel imgLabel = getImgLabel(jugador, posicion);
         JLabel nombreLabel = getNombreLabel(jugador, posicion);
@@ -281,39 +386,51 @@ public class YugiGUI {
         }
     }
 
+    /**
+     * Verifica si el juego ha terminado (2 victorias para un jugador o empate).
+     */
     private void checkGameOver() {
-        int playerCount = getActiveCardIndices(playerCards).size();
-        int npcCount = getActiveCardIndices(npcCards).size();
-
-        if (playerCount == 0 && npcCount == 0) {
-            JOptionPane.showMessageDialog(mainPanel, "¡Empate! Ambos jugadores se quedaron sin cartas.", "Fin del Juego", JOptionPane.INFORMATION_MESSAGE);
+        if (playerWins >= 2 && npcWins >= 2) {
+            JOptionPane.showMessageDialog(mainPanel, "¡Empate! Ambos jugadores alcanzaron 2 victorias.", "Fin del Juego", JOptionPane.INFORMATION_MESSAGE);
             disableGame();
-        } else if (playerCount == 0) {
-            JOptionPane.showMessageDialog(mainPanel, "¡NPC gana! El jugador se quedó sin cartas.", "Fin del Juego", JOptionPane.INFORMATION_MESSAGE);
+        } else if (playerWins >= 2) {
+            JOptionPane.showMessageDialog(mainPanel, "¡El jugador gana! Alcanzó 2 victorias.", "Fin del Juego", JOptionPane.INFORMATION_MESSAGE);
             disableGame();
-        } else if (npcCount == 0) {
-            JOptionPane.showMessageDialog(mainPanel, "¡El jugador gana! El NPC se quedó sin cartas.", "Fin del Juego", JOptionPane.INFORMATION_MESSAGE);
+        } else if (npcWins >= 2) {
+            JOptionPane.showMessageDialog(mainPanel, "¡NPC gana! Alcanzó 2 victorias.", "Fin del Juego", JOptionPane.INFORMATION_MESSAGE);
             disableGame();
         }
     }
 
+    /**
+     * Desactiva todos los botones al finalizar el juego.
+     */
     private void disableGame() {
-        usarButton1.setEnabled(false);
-        usarButton2.setEnabled(false);
-        usarButton3.setEnabled(false);
+        AtaqueButton1.setEnabled(false);
+        AtaqueButton2.setEnabled(false);
+        AtaqueButton3.setEnabled(false);
+        DefensaButton1.setEnabled(false);
+        DefensaButton2.setEnabled(false);
+        DefensaButton3.setEnabled(false);
         RandomUp.setEnabled(false);
         RandomDown.setEnabled(false);
     }
 
+    /**
+     * Obtiene el JLabel de la imagen para una carta.
+     * @param jugador 1 para humano (CardDown*), 2 para NPC (CardUp*)
+     * @param posicion Posición de la carta (1, 2, 3)
+     * @return JLabel de la imagen o null si la posición es inválida
+     */
     private JLabel getImgLabel(int jugador, int posicion) {
-        if (jugador == 1) { // Human player (bottom)
+        if (jugador == 1) { // Jugador humano (abajo)
             return switch (posicion) {
                 case 1 -> ImgDown1;
                 case 2 -> ImgDown2;
                 case 3 -> ImgDown3;
                 default -> null;
             };
-        } else { // NPC (top)
+        } else { // NPC (arriba)
             return switch (posicion) {
                 case 1 -> ImgUp1;
                 case 2 -> ImgUp2;
@@ -323,15 +440,21 @@ public class YugiGUI {
         }
     }
 
+    /**
+     * Obtiene el JLabel de los datos para una carta.
+     * @param jugador 1 para humano (CardDown*), 2 para NPC (CardUp*)
+     * @param posicion Posición de la carta (1, 2, 3)
+     * @return JLabel de los datos o null si la posición es inválida
+     */
     private JLabel getNombreLabel(int jugador, int posicion) {
-        if (jugador == 1) {
+        if (jugador == 1) { // Jugador humano (abajo)
             return switch (posicion) {
                 case 1 -> NombreDown1;
                 case 2 -> NombreDown2;
                 case 3 -> NombreDown3;
                 default -> null;
             };
-        } else { // NPC (top)
+        } else { // NPC (arriba)
             return switch (posicion) {
                 case 1 -> Nombreup1;
                 case 2 -> Nombreup2;
@@ -341,7 +464,14 @@ public class YugiGUI {
         }
     }
 
+    /**
+     * Muestra los datos e imagen de una carta en la interfaz gráfica.
+     * @param carta Objeto Cartas con los datos
+     * @param jugador 1 para humano, 2 para NPC
+     * @param posicion Posición de la carta (1, 2, 3)
+     */
     public void extraer_datos(Cartas carta, int jugador, int posicion) {
+        // Construir texto HTML con los datos de la carta
         String texto = "<html>" +
                 "<table style='width:100%;'>" +
                 "<tr>" +
@@ -362,6 +492,7 @@ public class YugiGUI {
         JLabel imgLabel = getImgLabel(jugador, posicion);
         JLabel nombreLabel = getNombreLabel(jugador, posicion);
 
+        // Cargar y escalar la imagen de la carta
         try {
             Image imagen = ImageIO.read(new URL(carta.getImage()));
             ImageIcon icon = new ImageIcon(imagen.getScaledInstance(120, 180, Image.SCALE_SMOOTH));
@@ -386,16 +517,22 @@ public class YugiGUI {
         if (panel != null) {
             panel.revalidate();
             panel.repaint();
+            mainPanel.revalidate();
+            mainPanel.repaint();
         }
     }
 
+    /**
+     * Punto de entrada principal para la aplicación.
+     * @param args Argumentos de línea de comandos (no utilizados)
+     */
     public static void main(String[] args) {
+        // Configurar y mostrar la ventana principal
         JFrame frame = new JFrame("YugiGUI - Batalla de Cartas");
         frame.setContentPane(new YugiGUI().mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(900, 700));
-        frame.pack();
-        frame.setLocationRelativeTo(null);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setUndecorated(false);
         frame.setVisible(true);
     }
 }
