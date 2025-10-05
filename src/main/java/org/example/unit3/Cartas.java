@@ -13,6 +13,7 @@ public class Cartas {
     private String level;
     private String race;
     private String attribute;
+    private String image;
 
     public Cartas(String id, String name, String type, String desc, String atk, String def, String level, String race, String attribute) {
         this.id = id;
@@ -98,5 +99,13 @@ public class Cartas {
 
     public void setAttribute(String attribute) {
         this.attribute = attribute;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
