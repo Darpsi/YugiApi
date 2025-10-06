@@ -30,8 +30,10 @@ Luego atacara de ser el caso aleatoriamente a una de las cartas del npc y el npc
 
 CAPTURAS:
 
-![Screenshot 2025-10-05 210342.png](../../../Pictures/Screenshots/Screenshot%202025-10-05%20210342.png)
+<img width="1365" height="716" alt="Screenshot 2025-10-05 210342" src="https://github.com/user-attachments/assets/f9f18f40-f246-4182-b9a0-5c2f59481e31" />
 
-![Screenshot 2025-10-05 210356.png](../../../Pictures/Screenshots/Screenshot%202025-10-05%20210356.png)
 
-![Screenshot 2025-10-05 210404.png](../../../Pictures/Screenshots/Screenshot%202025-10-05%20210404.png)
+<img width="1365" height="721" alt="Screenshot 2025-10-05 210356" src="https://github.com/user-attachments/assets/26e46620-f5c8-48e1-9357-c3505bba8793" />
+
+<img width="1365" height="717" alt="Screenshot 2025-10-05 210404" src="https://github.com/user-attachments/assets/0d4f3856-c9cb-4499-9b09-1650b118df9e" />
+
